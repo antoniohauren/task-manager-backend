@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  postgres:
+  db:
     image: postgres:latest
     container_name: task-manager
     environment:
@@ -10,3 +10,18 @@ services:
       POSTGRES_PASSWORD: root
     ports:
       - "5432:5432"
+  api:
+    depends_on:
+      - db
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+      - .env
+    command: npm run start:dev
+    ports:
+      - 3000:3000
+
