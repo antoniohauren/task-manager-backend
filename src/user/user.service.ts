@@ -35,7 +35,13 @@ export class UserService {
   }
 
   findAll() {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
+    });
   }
 
   async findOne(id: string): Promise<UserDomain> {
@@ -48,5 +54,22 @@ export class UserService {
     }
 
     return new UserDomain(user);
+  }
+
+  async findOneByEmail(email: string): Promise<UserDomain> {
+    return await this.prisma.user.findUnique({
+      where: { email },
+    });
+  }
+
+  async validatePassword(password: string, hashPassword: string) {
+    return bcrypt.compareSync(password, hashPassword);
+  }
+
+  async setRefreshToken(id: string, refreshToken: string) {
+    await this.prisma.user.update({
+      where: { id },
+      data: { refreshToken },
+    });
   }
 }
