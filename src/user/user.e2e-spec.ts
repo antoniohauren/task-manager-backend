@@ -21,6 +21,7 @@ describe('platform e2e', () => {
         objectBuilder<CreateUserDto>({
           email: 'alice@gmail.com',
           name: 'teste',
+          password: 'teste',
         }),
       )
       .expectStatus(HttpStatus.CONFLICT);
@@ -42,6 +43,7 @@ describe('platform e2e', () => {
         objectBuilder<CreateUserDto>({
           email: 'antonio@gmail.com',
           name: 'Antonio',
+          password: 'teste',
         }),
       )
       .expectStatus(HttpStatus.CREATED)
