@@ -68,8 +68,6 @@ export class AuthService {
   async refresh(id: string, refreshToken: string) {
     const user = await this.userService.findOne(id);
 
-    console.log(user);
-
     if (!user.refreshToken) {
       throw new UnauthorizedException();
     }
