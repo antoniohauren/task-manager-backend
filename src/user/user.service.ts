@@ -21,7 +21,7 @@ export class UserService {
       throw new ConflictException('Email already in use');
     }
 
-    const hashPassword = bcrypt.hashSync('bob_password', 10);
+    const hashPassword = bcrypt.hashSync(createUserDto.password, 10);
 
     const createdUser = await this.prisma.user.create({
       data: {

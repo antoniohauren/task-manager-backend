@@ -1,8 +1,8 @@
 import { UserService } from '@/user/user.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { SignInDto } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { UserPayload } from './domain/user-payload';
+import { SignInDto, SignUpDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +40,19 @@ export class AuthService {
     return tokens;
   }
 
-  signUp() {}
+  async signUp(signUpDto: SignUpDto) {
+    const createdUser = await this.userService.create(signUpDto);
+
+    const payload: UserPayload = {
+      id: createdUser.id,
+      email: createdUser.email,
+      name: createdUser.name,
+    };
+
+    const tokens = await this.generateTokens(payload);
+
+    return tokens;
+  }
 
   private async generateTokens(userPayload: UserPayload) {
     const [accessToken, refreshToken] = await Promise.all([
