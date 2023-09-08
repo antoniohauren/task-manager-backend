@@ -1,8 +1,13 @@
 import { UserService } from '@/user/user.service';
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserPayload } from './domain/user-payload';
 import { SignInDto, SignUpDto } from './dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -58,6 +63,37 @@ export class AuthService {
 
   async signOut(userId: string) {
     return this.userService.removeRefreshToken(userId);
+  }
+
+  async refresh(id: string, refreshToken: string) {
+    const user = await this.userService.findOne(id);
+
+    console.log(user);
+
+    if (!user.refreshToken) {
+      throw new UnauthorizedException();
+    }
+
+    const isValidRefresh = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (!isValidRefresh) {
+      throw new ForbiddenException();
+    }
+
+    const payload: UserPayload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    const tokens = await this.generateTokens(payload);
+
+    this.userService.setRefreshToken(user.id, tokens.refreshToken);
+
+    return tokens;
   }
 
   private async generateTokens(userPayload: UserPayload) {

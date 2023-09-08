@@ -40,5 +40,9 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
   @HttpCode(HttpStatus.OK)
-  refresh() {}
+  refresh(@Req() req: Request) {
+    const user = req.user;
+
+    return this.authService.refresh(user['id'], user['refreshToken']);
+  }
 }
