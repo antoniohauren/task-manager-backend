@@ -51,6 +51,8 @@ export class AuthService {
 
     const tokens = await this.generateTokens(payload);
 
+    this.userService.setRefreshToken(createdUser.id, tokens.refreshToken);
+
     return tokens;
   }
 

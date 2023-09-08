@@ -67,9 +67,11 @@ export class UserService {
   }
 
   async setRefreshToken(id: string, refreshToken: string) {
+    const hash = bcrypt.hashSync(refreshToken, 10);
+
     await this.prisma.user.update({
       where: { id },
-      data: { refreshToken },
+      data: { refreshToken: hash },
     });
   }
 }
