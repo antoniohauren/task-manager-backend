@@ -74,4 +74,11 @@ export class UserService {
       data: { refreshToken: hash },
     });
   }
+
+  async removeRefreshToken(id: string) {
+    await this.prisma.user.updateMany({
+      where: { id, refreshToken: { not: null } },
+      data: { refreshToken: null },
+    });
+  }
 }
