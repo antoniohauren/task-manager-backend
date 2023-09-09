@@ -1,11 +1,15 @@
 import { Exclude } from 'class-transformer';
-import { User } from '@prisma/client';
+import { User, Task } from '@prisma/client';
 
 export class UserDomain implements User {
   id: string;
   email: string;
   name: string;
   refreshToken: string;
+  tasks?: Task[];
+
+  createdAt: Date;
+  updatedAt: Date;
 
   @Exclude()
   hashPassword: string;

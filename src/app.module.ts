@@ -7,9 +7,10 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guard';
+import { TaskModule } from './task/task.module';
 
 @Module({
-  imports: [UserModule, PrismaModule, AuthModule],
+  imports: [UserModule, PrismaModule, AuthModule, TaskModule],
   controllers: [AppController],
   providers: [
     AppService,
