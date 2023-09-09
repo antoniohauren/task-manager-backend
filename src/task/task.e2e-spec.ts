@@ -38,7 +38,7 @@ describe('task e2e', () => {
         .get('/task')
         .withBearerToken(accessToken)
         .expectStatus(HttpStatus.OK)
-        .expectJsonLength(2);
+        .expectJsonLength(3);
     });
   });
 
@@ -257,6 +257,95 @@ describe('task e2e', () => {
       return pactum
         .spec()
         .patch('/task/archive/alice_task02_id')
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.BAD_REQUEST);
+    });
+  });
+
+  describe('update task status', () => {
+    it('should throw if not logged', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/valid_id')
+        .withJson({
+          status: 'DONE',
+        })
+        .expectStatus(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should throw 404 error if task not found', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/invalid_id')
+        .withJson({
+          status: 'DONE',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.NOT_FOUND);
+    });
+
+    it('should throw 403 error if task is from another user', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/bob_task01_id')
+        .withJson({
+          status: 'DONE',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.FORBIDDEN);
+    });
+
+    it('should throw 400 error if task status is already the same', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/alice_task02_id')
+        .withJson({
+          status: 'TODO',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should throw 400 error if task status is ARCHIVED', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/alice_task02_id')
+        .withJson({
+          status: 'TODO',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should update a task status', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/alice_task03_id')
+        .withJson({
+          status: 'DONE',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.OK);
+    });
+
+    it('should throw 400 error if task status is DONE', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/alice_task03_id')
+        .withJson({
+          status: 'TODO',
+        })
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.BAD_REQUEST);
+    });
+
+    it('should throw 400 error if try to archive a task', async () => {
+      return pactum
+        .spec()
+        .patch('/task/status/alice_task03_id')
+        .withJson({
+          status: 'ARCHIVED',
+        })
         .withBearerToken(accessToken)
         .expectStatus(HttpStatus.BAD_REQUEST);
     });

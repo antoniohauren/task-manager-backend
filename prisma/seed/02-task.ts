@@ -4,6 +4,7 @@ import { WithId } from './types';
 const keys = [
   'alice_task01',
   'alice_task02',
+  'alice_task03',
   'bob_task01',
   'bob_task02',
 ] as const;
@@ -22,6 +23,13 @@ export const tasks: Record<
     id: 'alice_task02_id',
     title: 'Alice Task 02',
     description: 'Alice Task 02 Description',
+    userId: 'alice_id',
+  },
+  alice_task03: {
+    id: 'alice_task03_id',
+    title: 'Alice Task 03',
+    description: 'Alice Task 03 Description',
+    status: 'DOING',
     userId: 'alice_id',
   },
   bob_task01: {
