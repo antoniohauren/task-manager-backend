@@ -12,6 +12,7 @@ import {
 import { UpdateTaskDto } from './dto';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TaskService } from './task.service';
+import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 
 @Controller('task')
 export class TaskController {
@@ -40,6 +41,20 @@ export class TaskController {
     @CurrentUser() user: UserJwt,
   ) {
     return this.taskService.update(id, updateTaskDto, user.id);
+  }
+
+  @Patch('/status/:id')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+    @CurrentUser() user: UserJwt,
+  ) {
+    return this.taskService.updateStatus(id, updateTaskStatusDto, user.id);
+  }
+
+  @Patch('/archive/:id/')
+  archiveTask(@Param('id') id: string, @CurrentUser() user: UserJwt) {
+    return this.taskService.archiveTask(id, user.id);
   }
 
   @Delete(':id')

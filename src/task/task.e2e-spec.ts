@@ -219,4 +219,46 @@ describe('task e2e', () => {
         .expectBodyContains('updated title');
     });
   });
+
+  describe('archive task', () => {
+    it('should throw if not logged', async () => {
+      return pactum
+        .spec()
+        .patch('/task/archive/valid_id')
+        .expectStatus(HttpStatus.UNAUTHORIZED);
+    });
+
+    it('should throw 404 error if task not found', async () => {
+      return pactum
+        .spec()
+        .patch('/task/archive/invalid_id')
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.NOT_FOUND);
+    });
+
+    it('should throw 403 error if task is from another user', async () => {
+      return pactum
+        .spec()
+        .patch('/task/archive/bob_task01_id')
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.FORBIDDEN);
+    });
+
+    it('should archive a task', async () => {
+      return pactum
+        .spec()
+        .patch('/task/archive/alice_task02_id')
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.OK)
+        .expectBodyContains('ARCHIVED');
+    });
+
+    it('should throw 400 error if task is already archived', async () => {
+      return pactum
+        .spec()
+        .patch('/task/archive/alice_task02_id')
+        .withBearerToken(accessToken)
+        .expectStatus(HttpStatus.BAD_REQUEST);
+    });
+  });
 });
