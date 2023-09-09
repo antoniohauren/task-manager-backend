@@ -9,10 +9,8 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { UpdateTaskDto } from './dto';
-import { CreateTaskDto } from './dto/create-task.dto';
+import { CreateTaskDto, UpdateTaskDto, UpdateTaskStatusDto } from './dto';
 import { TaskService } from './task.service';
-import { UpdateTaskStatusDto } from './dto/update-task-status.dto';
 
 @Controller('task')
 export class TaskController {
