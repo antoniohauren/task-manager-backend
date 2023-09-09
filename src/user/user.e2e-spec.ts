@@ -4,7 +4,7 @@ import { execSync } from 'child_process';
 import * as pactum from 'pactum';
 import { CreateUserDto } from './dto';
 
-describe('platform e2e', () => {
+describe('user e2e', () => {
   beforeAll(async () => {
     execSync('npm run prisma:reset');
   });
