@@ -11,7 +11,9 @@ import { CurrentUser, Public } from './decorator';
 import { SignInDto, SignUpDto } from './dto';
 import { RefreshTokenGuard } from './guard';
 import { UserJwt } from './domain/user-jwt';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
