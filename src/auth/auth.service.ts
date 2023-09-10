@@ -42,7 +42,10 @@ export class AuthService {
 
     this.userService.setRefreshToken(user.id, tokens.refreshToken);
 
-    return tokens;
+    return {
+      ...payload,
+      ...tokens,
+    };
   }
 
   async signUp(signUpDto: SignUpDto) {
@@ -58,7 +61,10 @@ export class AuthService {
 
     this.userService.setRefreshToken(createdUser.id, tokens.refreshToken);
 
-    return tokens;
+    return {
+      ...payload,
+      ...tokens,
+    };
   }
 
   async signOut(userId: string) {
