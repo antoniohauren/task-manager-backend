@@ -28,6 +28,11 @@ export class TaskController {
     return this.taskService.findAllByUser(user.id);
   }
 
+  @Get('/archived')
+  findAllArchivedByUser(@CurrentUser() user: UserJwt) {
+    return this.taskService.findAllArchivedByUser(user.id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: UserJwt) {
     return this.taskService.findOne(id, user.id);

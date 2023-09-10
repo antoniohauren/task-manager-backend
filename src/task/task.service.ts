@@ -38,6 +38,9 @@ export class TaskService {
     const tasksByStatus: Record<string, (typeof tasks)[number][]> = {};
 
     tasks.forEach((task) => {
+      if (task.status === 'ARCHIVED') {
+        return;
+      }
       if (!tasksByStatus[task.status]) {
         tasksByStatus[task.status] = [task];
       } else {
@@ -46,6 +49,21 @@ export class TaskService {
     });
 
     return tasksByStatus;
+  }
+
+  findAllArchivedByUser(userId: string) {
+    return this.prisma.task.findMany({
+      where: {
+        userId,
+        status: 'ARCHIVED',
+      },
+      select: {
+        id: true,
+        description: true,
+        title: true,
+        status: true,
+      },
+    });
   }
 
   async findOne(id: string, userId: string) {
