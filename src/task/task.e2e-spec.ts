@@ -38,7 +38,30 @@ describe('task e2e', () => {
         .get('/task')
         .withBearerToken(accessToken)
         .expectStatus(HttpStatus.OK)
-        .expectJsonLength(3);
+        .expectJsonMatchStrict({
+          TODO: [
+            {
+              id: 'alice_task01_id',
+              description: 'Alice Task 01 Description',
+              title: 'Alice Task 01',
+              status: 'TODO',
+            },
+            {
+              id: 'alice_task02_id',
+              description: 'Alice Task 02 Description',
+              title: 'Alice Task 02',
+              status: 'TODO',
+            },
+          ],
+          DOING: [
+            {
+              id: 'alice_task03_id',
+              description: 'Alice Task 03 Description',
+              title: 'Alice Task 03',
+              status: 'DOING',
+            },
+          ],
+        });
     });
   });
 
@@ -126,9 +149,7 @@ describe('task e2e', () => {
         .withBearerToken(accessToken)
         .withJson(
           objectBuilder<CreateTaskDto>({
-            status: 'TODO',
             title: 'Alice Task 03',
-            userId: 'alice_id',
             description: 'Alice Task 03 Description',
           }),
         )

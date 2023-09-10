@@ -1,11 +1,11 @@
+import { PrismaService } from '@/prisma/prisma.service';
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
-  BadRequestException,
 } from '@nestjs/common';
 import { CreateTaskDto, UpdateTaskDto, UpdateTaskStatusDto } from './dto';
-import { PrismaService } from '@/prisma/prisma.service';
 
 @Injectable()
 export class TaskService {
@@ -22,12 +22,30 @@ export class TaskService {
     });
   }
 
-  findAllByUser(userId: string) {
-    return this.prisma.task.findMany({
+  async findAllByUser(userId: string) {
+    const tasks = await this.prisma.task.findMany({
       where: {
         userId,
       },
+      select: {
+        id: true,
+        description: true,
+        title: true,
+        status: true,
+      },
     });
+
+    const tasksByStatus: Record<string, (typeof tasks)[number][]> = {};
+
+    tasks.forEach((task) => {
+      if (!tasksByStatus[task.status]) {
+        tasksByStatus[task.status] = [task];
+      } else {
+        tasksByStatus[task.status].push(task);
+      }
+    });
+
+    return tasksByStatus;
   }
 
   async findOne(id: string, userId: string) {

@@ -1,4 +1,7 @@
-import { PickType } from '@nestjs/swagger';
-import { CreateTaskDto } from './create-task.dto';
+import { $Enums } from '@prisma/client';
+import { IsEnum } from 'class-validator';
 
-export class UpdateTaskStatusDto extends PickType(CreateTaskDto, ['status']) {}
+export class UpdateTaskStatusDto {
+  @IsEnum($Enums.TaskStatus)
+  status: $Enums.TaskStatus;
+}

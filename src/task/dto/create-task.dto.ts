@@ -9,7 +9,7 @@ export class CreateTaskDto implements Omit<Prisma.TaskCreateInput, 'User'> {
   @IsOptional()
   description?: string;
 
-  status: $Enums.TaskStatus;
+  status?: $Enums.TaskStatus;
 
-  userId: string;
+  userId?: string;
 }
