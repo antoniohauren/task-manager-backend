@@ -11,9 +11,14 @@ import { PrismaService } from '@/prisma/prisma.service';
 export class TaskService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createTaskDto: CreateTaskDto) {
+  create(createTaskDto: CreateTaskDto, userId: string) {
     return this.prisma.task.create({
-      data: createTaskDto,
+      data: {
+        title: createTaskDto.title,
+        description: createTaskDto.description,
+        status: 'TODO',
+        userId,
+      },
     });
   }
 

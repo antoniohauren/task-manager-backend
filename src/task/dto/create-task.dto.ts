@@ -1,5 +1,5 @@
 import { $Enums, Prisma } from '@prisma/client';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class CreateTaskDto implements Omit<Prisma.TaskCreateInput, 'User'> {
   @IsString()
@@ -9,9 +9,7 @@ export class CreateTaskDto implements Omit<Prisma.TaskCreateInput, 'User'> {
   @IsOptional()
   description?: string;
 
-  @IsEnum($Enums.TaskStatus)
   status: $Enums.TaskStatus;
 
-  @IsString()
   userId: string;
 }
